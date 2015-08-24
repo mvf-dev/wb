@@ -1,0 +1,243 @@
+<?php
+ mysql_connect("mvf-paramount-web:3306", "root", "skunkstripe") or die(mysql_error());
+ mysql_select_db("paramountmdl") or die(mysql_error());
+ $europe=array("AUSTRIA","BELGIUM-DUTCH","BELGIUM-FRENCH","BULGARIA","CROATIA","CZECH REPUBLIC","DENMARK","ESTONIA","FINLAND","FRANCE","GERMANY",
+ "GREECE","HUNGARY","ICELAND","IRELAND","ITALY","LATVIA","LITHUANIA","LUXEMBOURG-DUTCH","LUXEMBOURG-FRENCH","LUXEMBOURG-GERMAN","MACEDONIA","MONTENEGRO","NETHERLANDS",
+ "NORWAY","POLAND","PORTUGAL","ROMANIA","SERBIA","SLOVAKIA","SLOVENIA","SPAIN","SPAIN-CATALAN","SWEDEN","SWITZERLAND-FRENCH","SWITZERLAND-GERMAN","SWITZERLAND-ITALIAN","TURKEY","UKRAINE","UNITED KINGDOM");
+ $middleEast=array("EGYPT","GULF STATES","ISRAEL","KUWAIT","LEBANON","PAKISTAN","SAUDI ARABIA");
+ $asia=array("BANGLADESH","CAMBODIA","CHINA","HONG KONG","INDIA","INDONESIA","JAPAN","MALAYSIA","NEPAL","PHILIPPINES","RUSSIA","SINGAPORE","SOUTH KOREA","TAIWAN","THAILAND","VIETNAM");
+ $northAmerica=array("CANADA","CANADA-FRENCH","MEXICO","UNITED STATES");
+ $southAmerica=array("VENEZUELA","URUGUAY","PERU","COLOMBIA","CHILE","BRAZIL","ARGENTINA");
+ $centralAmerica=array("CENTRAL AMERICA");
+ $africa=array("SOUTH AFRICA");
+ $australia=array("AUSTRALIA","NEW ZEALAND");
+?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+<SCRIPT SRC="javascript/jquery-1.9.1.js"> </SCRIPT>
+<SCRIPT>
+$(document).ready(function() {
+        $("#showEurope").click(function() {
+		$(".europe").toggle(function() {
+			var $x=$(".europe input:checkbox"); 
+			$x.prop("checked", true);
+		});
+			
+        });
+
+	 $("#showMiddleEast").click(function() {
+                $(".middleEast").toggle(function() {
+			var $x=$(".middleEast input:checkbox");
+                        $x.prop("checked", true);
+                });
+
+        });
+	 $("#showAsia").click(function() {
+                $(".asia").toggle(function() {
+                        var $x=$(".asia input:checkbox");
+                        $x.prop("checked", true);
+		 });
+
+        });
+	$("#showNorthAmerica").click(function() {
+                $(".northAmerica").toggle( function() {
+                        var $x=$(".northAmerica input:checkbox");
+                        $x.prop("checked", true);
+                 });
+
+        });
+  	$("#showSouthAmerica").click(function() {
+                $(".southAmerica").toggle(function() {
+                        var $x=$(".southAmerica input:checkbox");
+                        $x.prop("checked", true);
+                 });
+
+        });
+	 $("#showCentralAmerica").click(function() {
+                $(".centralAmerica").toggle(function() {
+                        var $x=$(".centralAmerica input:checkbox");
+                        $x.prop("checked", true);
+                 });
+
+        });
+	 $("#showAfrica").click(function() {
+                $(".africa").toggle(function() {
+                        var $x=$(".africa input:checkbox");
+                        $x.prop("checked", true);
+                 });
+
+        });
+
+	 $("#showAustralia").click(function() {
+                $(".australia").toggle(function() {
+                        var $x=$(".australia input:checkbox");
+                        $x.prop("checked", true);
+                 });
+
+        });
+
+
+
+
+
+});
+
+</SCRIPT>
+
+<SCRIPT LANGUAGE="JavaScript">
+function checkPUI(field) {
+        var dat=field.value;
+	var check =/^[0-9-]+$/; 
+        if(dat.length==0||dat==""||dat==null){
+                field.style.background = 'Yellow';
+                alert("PUI cannot be blank");
+                return false;
+        }
+
+	if(dat.length!=9 || !dat.match(check))  {
+		field.style.background = 'Yellow';
+                alert("Invalid PUI");
+                return false;
+	}
+        else {
+                field.style.background = 'White';
+        }
+        return true;
+}
+
+
+function checkIt() {
+	 var PUI = document.form1.pui;
+	if(checkPUI(PUI)) {
+		return true;
+	} 
+return false;
+}
+
+</SCRIPT>
+
+</head>
+<body>
+<table width="800" border="1" align="center" cellpadding="0"
+                cellspacing="1" >
+<tr>
+<form name="form1" method="post" onsubmit="return checkIt();" action="<?php echo $PHP_SELF; ?>">
+	<td>    
+	    <table name="search" align="center" width="100%" border="0" cellpadding="10" cellspacing="0">
+        	<tr><td colspan="4" align="center"><h3>MetaData Search</h3></td></tr>
+
+
+<tr><td colspan="2">PUI: <input name="pui" id="pui" type="text"> </td> <td colspan="2">ISOCountry: <input name="isocountry" id="isocuntry" type="text"></td><tr>
+<tr><td width="13%">Europe: <input type="checkbox" name="europe" value="Europe" id="showEurope"></td> <td width="12%">MiddleEast: <input type="checkbox" name="middleEast" value="MiddleEast" id="showMiddleEast"></td> 
+<td width="12%">Asia <input type="checkbox" name="asia" value="Asia" id="showAsia"> </td><td width="12%"> NorthAmerica: <input type="checkbox" name="northAmerica" value="NorthAmerica" id="showNorthAmerica"> </td></tr>
+<tr><td width="13%">SouthAmerica: <input type="checkbox" name="southAmerica" value="SouthAmerica" id="showSouthAmerica"> </td><td width="12%"> CentralAmerica: <input type="checkbox" name="centralAmerica" value="CentralAmerica" id="showCentralAmerica"></td>
+<td width="12%"> Africa: <input type="checkbox" name="africa" value="africa" id="showAfrica"> </td><td width="12%">Australia: <input type="checkbox" name="australia" value="Australia" id="showAustralia"></td></tr>
+<tr><td colspan="4"></td></tr>
+<tr><td colspan="4"></td></tr>
+<?php
+	$result=mysql_query("SELECT DISTINCT Territory from titles") or die(mysql_error());
+	while ($row= mysql_fetch_array($result)){
+		$code=$row['Territory'];
+		foreach($europe as $a) {
+			if($code==$a) {
+				echo "<tr class='europe' style='display: none;'><td>".$code."<input type='checkbox' name='territory[]' value='$code'></td>";
+			}
+		}
+		foreach($middleEast as $a) {
+                        if($code==$a) {
+                                echo "<tr class='middleEast' style='display: none;'><td>".$code."<input type='checkbox' name='territory[]' value='$code'>";
+                        }
+                }
+
+		foreach($asia as $a) {
+                        if($code==$a) {
+                                echo "<tr class='asia' style='display: none;'><td>".$code."<input type='checkbox' name='territory[]' value='$code'>";
+                        }
+                }
+
+		foreach($northAmerica as $a) {
+                        if($code==$a) {
+                                echo "<tr class='northAmerica' style='display: none;'><td>".$code."<input type='checkbox' name='territory[]' value='$code'>";
+                        }
+                }
+		foreach($southAmerica as $a) {
+                        if($code==$a) {
+                                echo "<tr class='southAmerica' style='display: none;'><td>".$code."<input type='checkbox' name='territory[]' value='$code'>";
+                        }
+                }
+
+		foreach($centralAmerica as $a) {
+                        if($code==$a) {
+                                echo "<tr class='centralAmerica' style='display: none;'><td>".$code."<input type='checkbox' name='territory[]' value='$code'>";
+                        }
+                }
+
+		foreach($africa as $a) {
+                        if($code==$a) {
+                                echo "<tr class='africa' style='display: none;'><td>".$code."<input type='checkbox' name='territory[]' value='$code'>";
+                        }
+                }
+
+		foreach($australia as $a) {
+                        if($code==$a) {
+                                echo "<tr class='australia' style='display: none;'><td>".$code."<input type='checkbox' name='territory[]' value='$code'>";
+                        }
+                }
+
+
+
+		
+	}
+
+?>
+			<tr><td colspan="4" align="center"><input type="submit" name="submit" value="Submit"></td></tr>
+			</table>
+		</td>
+	</form>
+	</tr>
+</table>
+</body>
+
+<?php
+if(isset($_POST['submit'])) {
+	$pui=$_POST['pui'];
+	if(!empty($_POST['isocountry'])) {
+		$iso=$_POST['isocountry'];
+		$code=explode(',',$iso);
+	        $size=sizeof($code);
+        	$str="SELECT * FROM titles WHERE PUI like '$pui'";
+
+		for ($i=0; $i<$size; $i++) {
+			$str.=" AND ISOCountry like ".$code[$i];
+		}
+
+		if(!empty($_POST['territory'])) {
+			foreach($_POST['territory'] as $territory) {
+				$str.=" AND Territory like ".$territory;
+			}	 		
+		}
+
+
+	}
+	else {
+		
+		 if(!empty($_POST['territory'])) {
+			$str="SELECT * FROM titles WHERE PUI like '$pui' AND Territory In (";
+                        foreach($_POST['territory'] as $territory) {
+                                $str.=$territory.",";
+                        }
+                $query=substr($str,0,-1);
+		}
+		else {
+			$str="SELECT * FROM titles WHERE PUI like '$pui'";
+		}
+		
+	}
+	echo $query.")";
+}
+
+?>
