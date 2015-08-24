@@ -1,0 +1,10 @@
+Search Tags:
+------------
+
+Input_File_Pathname
+
+SDI_Proxy_Directory_Name
+
+QC_Proxy_Directory_Name
+
+Not Used:  Post_Move_Directory_Name
